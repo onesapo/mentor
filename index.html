@@ -305,7 +305,12 @@ footer .btn{align-self:flex-start}
     .then(function(r){return r.json().then(function(j){return {ok:r.ok,j:j}})})
     .then(function(x){
       if(x.ok&&String(x.j.success)==='true'){form.reset();sync();say('Đã gửi đăng ký. Anh Cường sẽ liên hệ với bạn.')}
-      else{say('Chưa gửi được. Thử lại sau ít phút hoặc nhắn trực tiếp anh Cường.',true);sync()}
+      else{
+        var m=String((x.j&&x.j.message)||'');
+        console.warn('FormSubmit:',m);
+        if(/activat/i.test(m)){say('Form đang chờ anh Cường kích hoạt. Bạn thử lại sau, hoặc nhắn trực tiếp anh Cường.',true)}
+        else{say('Chưa gửi được'+(m?' ('+m+')':'')+'. Thử lại sau ít phút hoặc nhắn trực tiếp anh Cường.',true)}
+        sync()}
     })
     .catch(function(){say('Mạng đang chập chờn, chưa gửi được. Bấm gửi lại sau ít phút.',true);sync()});
   });
